@@ -21,12 +21,12 @@ library(reactable)
 ```
 
 ```{r}
-sample <- read_excel(here("Quarto outputs", "Data", "Sample data_20261012.xlsx"))
+sample <- read_excel(here("Data", "Sample data_20261012.xlsx"))
 ```
 ```{r}
 #| include: false
-source(here("Quarto outputs", "R scripts", "01 - Import and format data (quarto).R"))
-source(here("Quarto outputs", "R scripts", "02 - Analysis and visulisation.R"))
+source(here("R scripts", "01 - Import and format data (quarto).R"))
+source(here("R scripts", "02 - Analysis and visulisation.R"))
 ```
 # So sánh các bệnh viện {orientation="rows"}
 
