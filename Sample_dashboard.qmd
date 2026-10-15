@@ -1,0 +1,303 @@
+---
+title: "AMS dashboard"
+lang: vi
+engine: knitr
+format:
+  dashboard:
+    orientation: rows
+    scrolling: true
+    css: styles.css
+---
+
+
+```{r}
+#| include: false
+library(here)
+library(tidyverse)
+library(readxl)
+library(magrittr)
+library(writexl)
+library(reactable)
+```
+
+```{r}
+sample <- read_excel(here("Quarto outputs", "Data", "Sample data_20261012.xlsx"))
+```
+```{r}
+#| include: false
+source(here("Quarto outputs", "R scripts", "01 - Import and format data (quarto).R"))
+source(here("Quarto outputs", "R scripts", "02 - Analysis and visulisation.R"))
+```
+# So sánh các bệnh viện {orientation="rows"}
+
+## Row {height=8%}
+::: {.section-title}
+Top 10 kháng sinh tiêu thụ bởi các bệnh viện
+:::
+
+## Row {height=600px}
+
+### Column {width=30%}
+::: {.card title="Bệnh viện A" padding="1px"}
+
+```{r}
+top10_a
+```
+:::
+
+### Column {width=30%}
+::: {.card title="Bệnh viện B" padding="1px"}
+```{r}
+top10_b
+```
+:::
+
+### Column {width=30%}
+::: {.card title="Bệnh viện C" padding="1px"}
+```{r}
+top10_c
+```
+:::
+
+## Row {height=600px}
+
+::: {.card title="Xu hướng tiêu thụ kháng sinh của các bệnh viện"}
+```{r}
+tot_ddd_line_all
+```
+:::
+
+# Thống kê từng bệnh viện
+
+## Column {.tabset}
+
+### Bệnh viện A
+
+#### Column {width=65%}
+Tổng quan tháng 04/2026
+
+##### Row {height=10%}
+```{r}
+#| include: false
+tot_ddd_no_a <- am_tab_a |> summarise(tot_ddd = sum(`Total DDD/100 bed-days`)) |> pull(tot_ddd)
+```
+```{r}
+#| content: valuebox
+#| title: "Tổng số DDD/100 ngày-giường"
+list(value = tot_ddd_no_a,
+  color = "light",
+  icon = NULL)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Số loại kháng sinh sử dụng trong tháng (tính theo hoạt chất)"
+tot_ingre_no_a <- am_tab_a |> distinct(Ingredients) |> nrow()
+list(
+  value = tot_ingre_no_a,
+  color = "light",
+  icon = NULL
+)
+```
+
+##### Row {height=40%}
+
+::: {.card title="DDD/100 ngày-giường theo từng tháng"}
+
+::: {.text-muted .small}
+Tính trên tất cả các loại kháng sinh tại tất cả các khoa nội trú
+:::
+
+```{r}
+tot_ddd_line_a
+```
+
+:::
+
+##### Row {height=40%}
+
+::: {.card title="DDD/100 ngày-giường theo các kháng sinh quan tâm"}
+
+::: {.text-muted .small}
+Tính trên tất cả các khoa nội trú
+:::
+
+```{r}
+am_ddd_bar_a
+```
+
+:::
+
+#### Column {width=35% .flow}
+
+::: {.table-card title="DDD/100 ngày-giường theo hoạt chất (Tháng 04/2026)"}
+
+::: {.text-muted .small}
+Tính trên tất cả các khoa nội trú
+:::
+
+```{r}
+reactable(
+  am_tab_a,
+  striped = TRUE,
+  compact = TRUE,
+  columns = list(
+    Ingredients = colDef(name = "Hoạt chất"),
+    `Total DDD/100 bed-days` = colDef(name = "DDD/100 ngày-giường", format = colFormat(digits = 2))
+  ))
+```
+:::
+
+### Bệnh viện B
+
+#### Column {width=65%}
+Tổng quan tháng 04/2026
+
+##### Row {height=10%}
+```{r}
+#| include: false
+tot_ddd_no_b <- am_tab_b |> summarise(tot_ddd = sum(`Total DDD/100 bed-days`)) |> pull(tot_ddd)
+```
+```{r}
+#| content: valuebox
+#| title: "Tổng số DDD/100 ngày-giường"
+list(value = tot_ddd_no_b,
+  color = "light",
+  icon = NULL)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Số loại kháng sinh sử dụng trong tháng (tính theo hoạt chất)"
+tot_ingre_no_b <- am_tab_b |> distinct(Ingredients) |> nrow()
+list(
+  value = tot_ingre_no_b,
+  color = "light",
+  icon = NULL
+)
+```
+
+##### Row {height=40%}
+
+::: {.card title="DDD/100 ngày-giường theo từng tháng"}
+
+::: {.text-muted .small}
+Tính trên tất cả các loại kháng sinh tại tất cả các khoa nội trú
+:::
+
+```{r}
+tot_ddd_line_b
+```
+
+:::
+
+##### Row {height=40%}
+
+::: {.card title="DDD/100 ngày-giường theo các kháng sinh quan tâm"}
+
+::: {.text-muted .small}
+Tính trên tất cả các khoa nội trú
+:::
+
+```{r}
+am_ddd_bar_b
+```
+
+:::
+
+#### Column {width=35% .flow}
+
+::: {.table-card title="DDD/100 ngày-giường theo hoạt chất (Tháng 04/2026)"}
+
+::: {.text-muted .small}
+Tính trên tất cả các khoa nội trú
+:::
+
+```{r}
+reactable(
+  am_tab_b,
+  striped = TRUE,
+  compact = TRUE,
+  columns = list(
+    Ingredients = colDef(name = "Hoạt chất"),
+    `Total DDD/100 bed-days` = colDef(name = "DDD/100 ngày-giường", format = colFormat(digits = 2))
+  ))
+```
+:::
+
+### Bệnh viện C
+
+#### Column {width=65%}
+Tổng quan tháng 04/2026
+
+##### Row {height=10%}
+```{r}
+#| include: false
+tot_ddd_no_c <- am_tab_c |> summarise(tot_ddd = sum(`Total DDD/100 bed-days`)) |> pull(tot_ddd)
+```
+```{r}
+#| content: valuebox
+#| title: "Tổng số DDD/100 ngày-giường"
+list(value = tot_ddd_no_c,
+  color = "light",
+  icon = NULL)
+```
+
+```{r}
+#| content: valuebox
+#| title: "Số loại kháng sinh sử dụng trong tháng (tính theo hoạt chất)"
+tot_ingre_no_c <- am_tab_c |> distinct(Ingredients) |> nrow()
+list(
+  value = tot_ingre_no_c,
+  color = "light",
+  icon = NULL
+)
+```
+
+##### Row {height=40%}
+
+::: {.card title="DDD/100 ngày-giường theo từng tháng"}
+
+::: {.text-muted .small}
+Tính trên tất cả các loại kháng sinh tại tất cả các khoa nội trú
+:::
+
+```{r}
+tot_ddd_line_c
+```
+
+:::
+
+##### Row {height=40%}
+
+::: {.card title="DDD/100 ngày-giường theo các kháng sinh quan tâm"}
+
+::: {.text-muted .small}
+Tính trên tất cả các khoa nội trú
+:::
+
+```{r}
+am_ddd_bar_c
+```
+
+:::
+
+#### Column {width=35% .flow}
+
+::: {.table-card title="DDD/100 ngày-giường theo hoạt chất (Tháng 04/2026)"}
+
+::: {.text-muted .small}
+Tính trên tất cả các khoa nội trú
+:::
+
+```{r}
+reactable(
+  am_tab_c,
+  striped = TRUE,
+  compact = TRUE,
+  columns = list(
+    Ingredients = colDef(name = "Hoạt chất"),
+    `Total DDD/100 bed-days` = colDef(name = "DDD/100 ngày-giường", format = colFormat(digits = 2))
+  ))
+```
+:::
